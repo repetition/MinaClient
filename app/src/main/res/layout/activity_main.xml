@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="com.minaclient.MainActivity">
+
+    <Button
+        android:id="@+id/bt_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="connect" />
+
+
+    <Button
+        android:id="@+id/bt_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="close" />
+
+
+    <EditText
+        android:id="@+id/ed_ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/bt_connect"
+        android:layout_toLeftOf="@id/bt_close"
+        android:layout_toRightOf="@id/bt_connect"
+        android:text="192.168.8.105:7006" />
+
+    <TextView
+        android:id="@+id/tv_received"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bt_send"
+        android:layout_below="@id/bt_connect"
+        android:padding="5dp" />
+
+
+    <Button
+        android:id="@+id/bt_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="send" />
+
+    <EditText
+        android:id="@+id/ed_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/bt_send"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/bt_send" />
+
+</RelativeLayout>
