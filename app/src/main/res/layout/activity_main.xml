@@ -28,7 +28,7 @@
         android:layout_alignBottom="@id/bt_connect"
         android:layout_toLeftOf="@id/bt_close"
         android:layout_toRightOf="@id/bt_connect"
-        android:text="192.168.8.105:7006" />
+        android:text="192.168.8.106:7006" />
 
     <TextView
         android:id="@+id/tv_received"

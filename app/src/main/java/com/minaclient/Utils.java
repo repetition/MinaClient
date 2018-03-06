@@ -27,7 +27,7 @@ public class Utils {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                textView.append(str);
+                textView.append(str + "\n");
             }
         });
     }

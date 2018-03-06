@@ -7,10 +7,13 @@ import com.minaclient.MainActivity;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.session.IoSession;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 import java.lang.annotation.Target;
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
 
 /**
  * Created by RJYF-ZhangBo on 2018/3/5.
@@ -35,9 +38,14 @@ public class MinaManager {
         //接受数据大小
         connector.getSessionConfig().setReceiveBufferSize(DEFAULT_RECEIVE_BUFFER_SIZE);
         connector.getSessionConfig().setSendBufferSize(DEFAULT_SEND_BUFFER_SIZE);
+        TextLineCodecFactory factory = new TextLineCodecFactory(Charset.forName("UTF-8"));
+        factory.setDecoderMaxLineLength(Integer.MAX_VALUE);
+        factory.setEncoderMaxLineLength(Integer.MAX_VALUE);
+        connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(factory));
+
     }
 
-    public void send(String str){
+    public void send(String str) {
         if (null == session) {
             return;
         }
@@ -45,18 +53,19 @@ public class MinaManager {
     }
 
 
-
     public boolean connect() {
         try {
             connector.setConnectTimeoutMillis(DEFAULT_RECONNECT_TIMEOUT);
-            connector.setDefaultRemoteAddress(new InetSocketAddress("192.168.8.105",7006));
+            connector.setDefaultRemoteAddress(address);
             connector.setHandler(new ClientMessageHandler());
             ConnectFuture future = connector.connect();
             //等待连接到server
             future.awaitUninterruptibly();
-            session = future.getSession();
+            // TODO: 2018/3/6 连接成功时才获取session
+            boolean connected = future.isConnected();
+            Log.i(TAG,"connected : "+connected);
             return future.isConnected();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -65,7 +74,7 @@ public class MinaManager {
 
     public void close() {
         if (null == connector) {
-            return ;
+            return;
         }
         connector.dispose();
     }

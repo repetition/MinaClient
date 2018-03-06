@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.mina.MinaManager;
 
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -88,11 +89,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 address = new InetSocketAddress(strings[0], Integer.valueOf(strings[1]));
                 minaManager = new MinaManager(address);
                 minaManager.initMina();
-                Log.i(TAG, "执行连接...地址：" + strings);
-                Snackbar.make(mBt_Connect,"正在连接！+地址："+strings,Snackbar.LENGTH_SHORT).show();
+                Log.i(TAG, "执行连接...地址：" + Arrays.toString(strings));
+                Snackbar.make(mBt_Connect,"正在连接！+地址："+ Arrays.toString(strings),Snackbar.LENGTH_SHORT).show();
+                Utils.runOnUiThreadView(mTv_Received,"connect to server "+  Arrays.toString(strings));
                 boolean connect = minaManager.connect();
                 if (!connect) {
                     Log.i(TAG, "连接失败");
+                    Snackbar.make(mBt_Connect,"连接："+ Arrays.toString(strings)+"失败!",Snackbar.LENGTH_SHORT).show();
+                    mTv_Received.append("connect to server "+  Arrays.toString(strings)+"fail!");
+                    Utils.runOnUiThreadView(mTv_Received,"connect to server "+  Arrays.toString(strings)+"fail!");
                     return;
                 }
                 Utils.runOnUiThread(new Runnable() {
