@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,15 +21,16 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener ,View.OnLongClickListener {
     public static String TAG = MainActivity.class.getName();
 
     private Button mBt_Connect;
     private Button mBt_Close;
     private Button mBt_Send;
+    public static ScrollView mScrollView;
     private EditText mEd_Addr;
     private EditText mEd_Send;
-    public static  TextView mTv_Received = null;
+    public static TextView mTv_Received = null;
     private MinaManager minaManager;
     private InetSocketAddress address;
 
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-
+        mScrollView = findViewById(R.id.scrollView);
         mBt_Connect = findViewById(R.id.bt_connect);
         mBt_Close = findViewById(R.id.bt_close);
         mBt_Send = findViewById(R.id.bt_send);
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBt_Connect.setOnClickListener(this);
         mBt_Close.setOnClickListener(this);
         mBt_Send.setOnClickListener(this);
+        mBt_Send.setOnLongClickListener(this);
 
     }
 
@@ -68,12 +71,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bt_send:
                 String str_Send = mEd_Send.getText().toString();
+                Log.i(TAG, "send:" + str_Send);
                 minaManager.send(str_Send);
 
                 break;
         }
 
     }
+
+    @Override
+    public boolean onLongClick(View v) {
+
+
+
+
+        return false;
+    }
+
 
     private void connect() {
         Utils.executor(new Runnable() {
@@ -90,14 +104,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 minaManager = new MinaManager(address);
                 minaManager.initMina();
                 Log.i(TAG, "执行连接...地址：" + Arrays.toString(strings));
-                Snackbar.make(mBt_Connect,"正在连接！+地址："+ Arrays.toString(strings),Snackbar.LENGTH_SHORT).show();
-                Utils.runOnUiThreadView(mTv_Received,"connect to server "+  Arrays.toString(strings));
+                Snackbar.make(mBt_Connect, "正在连接！+地址：" + Arrays.toString(strings), Snackbar.LENGTH_SHORT).show();
+                Utils.runOnUiThreadView(mTv_Received, "connect to server " + Arrays.toString(strings));
                 boolean connect = minaManager.connect();
                 if (!connect) {
                     Log.i(TAG, "连接失败");
-                    Snackbar.make(mBt_Connect,"连接："+ Arrays.toString(strings)+"失败!",Snackbar.LENGTH_SHORT).show();
-                    mTv_Received.append("connect to server "+  Arrays.toString(strings)+"fail!");
-                    Utils.runOnUiThreadView(mTv_Received,"connect to server "+  Arrays.toString(strings)+"fail!");
+                    Snackbar.make(mBt_Connect, "连接：" + Arrays.toString(strings) + "失败!", Snackbar.LENGTH_SHORT).show();
+                    mTv_Received.append("connect to server " + Arrays.toString(strings) + "fail!");
+                    Utils.runOnUiThreadView(mTv_Received, "connect to server " + Arrays.toString(strings) + "fail!");
                     return;
                 }
                 Utils.runOnUiThread(new Runnable() {
@@ -108,11 +122,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
                 Log.i(TAG, "连接成功!");
-                Snackbar.make(mBt_Connect,"连接成功！",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mBt_Connect, "连接成功！", Snackbar.LENGTH_SHORT).show();
             }
         });
 
     }
-
-
 }

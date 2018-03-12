@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.minaclient.MainActivity;
 
+import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -38,18 +39,19 @@ public class MinaManager {
         //接受数据大小
         connector.getSessionConfig().setReceiveBufferSize(DEFAULT_RECEIVE_BUFFER_SIZE);
         connector.getSessionConfig().setSendBufferSize(DEFAULT_SEND_BUFFER_SIZE);
-        TextLineCodecFactory factory = new TextLineCodecFactory(Charset.forName("UTF-8"));
+/*        TextLineCodecFactory factory = new TextLineCodecFactory(Charset.forName("UTF-8"));
         factory.setDecoderMaxLineLength(Integer.MAX_VALUE);
         factory.setEncoderMaxLineLength(Integer.MAX_VALUE);
-        connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(factory));
+        connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(factory));*/
 
     }
 
     public void send(String str) {
         if (null == session) {
+            Log.e(TAG,"session is null!");
             return;
         }
-        session.write(str);
+        session.write(IoBuffer.wrap(str.getBytes(Charset.forName("utf-8"))));
     }
 
 
@@ -64,6 +66,10 @@ public class MinaManager {
             // TODO: 2018/3/6 连接成功时才获取session
             boolean connected = future.isConnected();
             Log.i(TAG,"connected : "+connected);
+
+            if (connected) {
+                session = future.getSession();
+            }
             return future.isConnected();
         } catch (Exception e) {
             e.printStackTrace();
