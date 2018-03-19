@@ -24,12 +24,12 @@ import static com.minaclient.MainActivity.mScrollView;
  */
 
 public class Utils {
-    public static String TAG = Utils.class.getName();
+    private static String TAG = Utils.class.getName();
 
-    public static final Handler handler = new Handler();
+    private static final Handler handler = new Handler();
 
-    public static final ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 20, 1000, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
-    public static SharedPreferences sp = null;
+    private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 20, 1000, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
+    private static SharedPreferences sp = null;
 
     public static void runOnUiThread(Runnable runnable) {
         handler.post(runnable);
